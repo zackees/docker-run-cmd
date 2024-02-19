@@ -11,9 +11,12 @@ RUN apk add --no-cache \
 # Set the working directory in the container
 WORKDIR /host_dir
 
-# Copy the entrypoint script into the container and make it executable
-COPY ./entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh && dos2unix ./entrypoint.sh
+# Build the entrypoint script in the container.
+RUN echo '#!/bin/sh' > /entrypoint.sh && \
+    echo 'yt-dlp "$@"' >> /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint to use /bin/sh
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
