@@ -1,10 +1,14 @@
 """
 Unit test file.
 """
+
 import os
 import unittest
 
-COMMAND = "docker_run_cmd"
+# COMMAND = "docker-run-cmd --dockerfile Dockerfile --name docker-yt-dlp --host-dir . --container-dir /host_dir -- --help"
+COMMAND = "docker-run-cmd -- --help"
+
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 
 class MainTester(unittest.TestCase):
@@ -12,7 +16,10 @@ class MainTester(unittest.TestCase):
 
     def test_imports(self) -> None:
         """Test command line interface (CLI)."""
-        rtn = os.system(COMMAND)
+        # rtn = os.system(COMMAND)
+        # self.assertEqual(0, rtn)
+        os.chdir(HERE)
+        rtn = os.system(f"{COMMAND}")
         self.assertEqual(0, rtn)
 
 
