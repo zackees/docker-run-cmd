@@ -56,7 +56,7 @@ def run(dockerfile: str, imagename: str, containername: str, hostvolume: str, re
     for log in container.logs(stream=True):
         print(log.decode("utf-8"), end="")
 
-def main() -> None:
+def unit_test() -> None:
     args, other_args = parse_args()
     dockerfile = args.dockerfile
     run(dockerfile=dockerfile,
@@ -70,4 +70,4 @@ if __name__ == "__main__":
     sys.argv.append("Dockerfile")
     sys.argv.append("--")
     sys.argv.append("--version")
-    main()
+    unit_test()
