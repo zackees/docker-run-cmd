@@ -58,7 +58,13 @@ def build_image(client: docker.DockerClient, image_name: str, dockerfile: str) -
         client.images.get(image_name)
     except docker.errors.ImageNotFound:
         print("Image does not exist, building...")
-        client.images.build(path=dockerfile, tag=image_name)
+        dirpath = ""
+        if os.path.isfile(dockerfile):
+            dirpath = os.path.dirname(dockerfile)
+        else:
+            dirpath = dockerfile
+        dirpath = os.path.abspath(dirpath)
+        client.images.build(path=dirpath, tag=image_name)
 
 def image_exists(client: docker.DockerClient, image_name: str) -> bool:
     try:

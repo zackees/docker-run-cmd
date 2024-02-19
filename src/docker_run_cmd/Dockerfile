@@ -16,4 +16,4 @@ COPY ./entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh && dos2unix ./entrypoint.sh
 
 # Set the entrypoint to use /bin/sh
-ENTRYPOINT ["sh", "-c", "yt-dlp", "\"$@\""]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
