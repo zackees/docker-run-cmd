@@ -123,7 +123,7 @@ def main() -> None:
         cmd_args=other_args)
 
 if __name__ == "__main__":
-    sys.argv.append("Dockerfile")
+    sys.argv.append("src/docker_run_cmd/Dockerfile")
     sys.argv.append("--")
     sys.argv.append("--version")
     main()
