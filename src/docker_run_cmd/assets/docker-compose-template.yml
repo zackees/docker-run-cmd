@@ -6,4 +6,6 @@ services:
       dockerfile: $dockerfile
     volumes:
       - $hostdir:/host_dir
+    container_name: my_custom_container_name
+    image: my_custom_image_name:latest
     command: $command

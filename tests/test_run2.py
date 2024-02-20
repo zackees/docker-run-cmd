@@ -19,7 +19,7 @@ class MainTester(unittest.TestCase):
 
     def test_imports(self) -> None:
         """Test command line interface (CLI)."""
-        run(dockerfile=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=["--help"])
+        run(dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=["--help"])
         print()
 
 
