@@ -1,14 +1,11 @@
-import sys
 import os
-import argparse
-import time
 import subprocess
+import time
 from typing import Optional
-import docker
-from docker.errors import DockerException
-from docker.models.containers import Container
-import docker.errors
 
+import docker
+import docker.errors
+from docker.models.containers import Container
 
 HOST_VOLUME = os.getcwd()
 
@@ -24,15 +21,24 @@ def check_docker_running() -> bool:
     except subprocess.CalledProcessError:
         return False
 
+
 def start_docker_service() -> None:
     """Start Docker service on Windows."""
-    if os.name == 'nt':  # Checks if the operating system is Windows
+    if os.name == "nt":  # Checks if the operating system is Windows
         print("Starting Docker service...")
-        subprocess.run(["start", "", WIN_DOCKER_EXE], shell=True, capture_output=True, text=True, check=True)  # shell=True for Windows
+        subprocess.run(
+            ["start", "", WIN_DOCKER_EXE],
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=True,
+        )  # shell=True for Windows
         print("Waiting for Docker to start...")
     else:  # For macOS and Linux (Ubuntu)
         print("Starting Docker service...")
-        subprocess.run(["open", "-a", "Docker"], capture_output=True, text=True, check=True)  # macOS specific
+        subprocess.run(
+            ["open", "-a", "Docker"], capture_output=True, text=True, check=True
+        )  # macOS specific
         # For Linux, Docker typically runs as a service already, so you might not need to start it manually.
 
     # Wait for Docker to start. Adjust the sleep time as needed.
@@ -46,11 +52,15 @@ def start_docker_service() -> None:
         print(".", end="", flush=True)
     raise OSError("Docker failed to start after waiting.")
 
-def get_container(client: docker.DockerClient, container_name: str) -> Optional[Container]:
+
+def get_container(
+    client: docker.DockerClient, container_name: str
+) -> Optional[Container]:
     try:
         return client.containers.get(container_name)
     except docker.errors.NotFound:
         return None
+
 
 def build_image(client: docker.DockerClient, image_name: str, dockerfile: str) -> None:
     """Build Docker image if it doesn't exist."""
@@ -65,6 +75,7 @@ def build_image(client: docker.DockerClient, image_name: str, dockerfile: str) -
             dirpath = dockerfile
         dirpath = os.path.abspath(dirpath)
         client.images.build(path=dirpath, tag=image_name)
+
 
 def image_exists(client: docker.DockerClient, image_name: str) -> bool:
     try:
