@@ -19,8 +19,14 @@ class MainTester(unittest.TestCase):
 
     def test_imports(self) -> None:
         """Test command line interface (CLI)."""
-        run(dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=["--help"])
+        run(name="yt-dlp-docker", dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=["--help"])
         print()
+
+    # video https://www.youtube.com/watch?v=mh_hNvGTmIg
+    def test_url(self) -> None:
+        url = "https://www.youtube.com/watch?v=mh_hNvGTmIg"
+        run(name="yt-dlp-docker", dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=[url])
+
 
 
 if __name__ == "__main__":

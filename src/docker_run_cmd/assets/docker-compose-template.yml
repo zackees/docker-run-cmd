@@ -1,11 +1,12 @@
 version: '3.3'
 services:
   app:
+    privileged: true
     build:
       context: .
       dockerfile: $dockerfile
     volumes:
       - $hostdir:/host_dir
-    container_name: my_custom_container_name
-    image: my_custom_image_name:latest
+    container_name: $container_name
+    image: $image_name:latest
     command: $command

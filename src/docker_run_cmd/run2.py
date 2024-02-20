@@ -37,7 +37,7 @@ def remove_existing_container(container_name):
         print(f"Removing existing container named {container_name}...")
         os.system(f'docker rm -f {container_name}')
 
-def run(dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> None:
+def run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> None:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
         print("docker-compose not found. Please install it.")
@@ -57,19 +57,27 @@ def run(dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> None:
         if not dockerfile.exists():
             # download the file
             print(f"Downloading Dockerfile from {dockerfile_or_url}...")
-            dockerfile = download(dockerfile_or_url, tempdir, replace=True)
+            dockerfile = download(url=dockerfile_or_url, path=tempdir, replace=True)
+            dockerfile = Path(dockerfile)
         docker_compose_content = DOCKER_COMPOSE_TEMPLATE.read_text(encoding="utf-8")
+        # add quotes to each object if they are not already quoted
+        cmd_list = [f'"{cmd}"' for cmd in cmd_list]
         cmd_str = "[" + ",".join(cmd_list) + "]"
         docker_compose_content = Template(docker_compose_content).substitute(
             dockerfile=dockerfile.name,
             hostdir=cwd.resolve(),
             command=cmd_str,
+            image_name=f"{name}-image",
+            container_name=f"{name}-container",
         )
         docker_compose_file = td / "docker-compose.yml"
         docker_compose_file.write_text(docker_compose_content, encoding="utf-8")
         # shutil.copy(DOCKER_COMPOSE_TEMPLATE, docker_compose_file)
         print(f"docker-compose file: {docker_compose_file}")
-        shutil.copy(dockerfile, td / "Dockerfile")
+        target_dockerfile = td / "Dockerfile"
+        # if not the same path then copy
+        contents = dockerfile.read_text(encoding="utf-8")
+        target_dockerfile.write_text(contents, encoding="utf-8")
         print(f"Dockerfile: {dockerfile}")
         print()
         prev_dir = Path.cwd()
@@ -79,9 +87,12 @@ def run(dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> None:
             # now docker compose run the app
             print("Building the Docker image...")
             os.system("docker-compose build")
-            remove_existing_container('my_custom_container_name')
+            remove_existing_container(f"{name}-container")
             print("Running the Docker container...")
             # Add -d to run in detached mode, if interactive mode is not needed.
+            os.system("docker network prune --force")
             os.system("docker-compose up --no-log-prefix --exit-code-from app")
+            os.system("docker network prune --force")
+            print("DONE")
         finally:
             os.chdir(prev_dir)

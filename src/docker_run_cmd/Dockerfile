@@ -18,5 +18,7 @@ RUN echo '#!/bin/sh' > /entrypoint.sh && \
 # Make the entrypoint script executable
 RUN chmod +x /entrypoint.sh
 
+RUN chmod 777 /host_dir
+
 # Set the entrypoint to use /bin/sh
 ENTRYPOINT ["sh", "/entrypoint.sh"]
