@@ -63,7 +63,6 @@ def main(dockerfile: str, image_name: str, container_name: str, host_volume: str
 
     assert os.path.isfile(dockerfile), f"Dockerfile not found: {dockerfile}"
     assert os.path.isdir(host_volume), f"Host volume not found: {host_volume}"
-    assert os.path.isdir(container_volume), f"Container volume not found: {container_volume}"
     assert os.path.isdir(working_dir), f"Working directory not found: {working_dir}"
 
     print("Building Docker image...")
