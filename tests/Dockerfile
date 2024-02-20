@@ -6,7 +6,7 @@ FROM python:3.10-alpine
 RUN apk add --no-cache \
     ffmpeg \
     dos2unix \
-    && pip install --no-cache-dir yt-dlp
+    && pip install --no-cache-dir yt-dlp ytdlp-brighteon
 
 # Set the working directory in the container
 WORKDIR /host_dir

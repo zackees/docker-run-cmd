@@ -37,7 +37,7 @@ def remove_existing_container(container_name):
         print(f"Removing existing container named {container_name}...")
         os.system(f'docker rm -f {container_name}')
 
-def run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> None:
+def docker_run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> int:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
         print("docker-compose not found. Please install it.")
@@ -47,8 +47,6 @@ def run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> No
         return
     if not check_docker_running():
         start_docker_service()
-    # test if dockerfile_or_url is a file
-
 
     with TemporaryDirectory() as tempdir:
         td = Path(tempdir)
@@ -82,6 +80,7 @@ def run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> No
         print()
         prev_dir = Path.cwd()
         os.chdir(td)
+        rtn = 0
         try:
             os.system("docker-compose down --rmi all")
             # now docker compose run the app
@@ -91,8 +90,9 @@ def run(name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]) -> No
             print("Running the Docker container...")
             # Add -d to run in detached mode, if interactive mode is not needed.
             os.system("docker network prune --force")
-            os.system("docker-compose up --no-log-prefix --exit-code-from app")
+            rtn = os.system("docker-compose up --no-log-prefix --exit-code-from app")
             os.system("docker network prune --force")
             print("DONE")
         finally:
             os.chdir(prev_dir)
+        return rtn
