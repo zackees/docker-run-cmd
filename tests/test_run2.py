@@ -20,19 +20,34 @@ class MainTester(unittest.TestCase):
     @unittest.skip("Skip this test")
     def test_imports(self) -> None:
         """Test command line interface (CLI)."""
-        docker_run(name="yt-dlp-docker", dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=["--help"])
+        docker_run(
+            name="yt-dlp-docker",
+            dockerfile_or_url=str(DOCKER_FILE),
+            cwd=PROJECT_DIR / "tmp",
+            cmd_list=["--help"],
+        )
         print()
 
     # video https://www.youtube.com/watch?v=mh_hNvGTmIg
     @unittest.skip("Skip this test")
     def test_url(self) -> None:
         url = "https://www.youtube.com/watch?v=mh_hNvGTmIg"
-        docker_run(name="yt-dlp-docker", dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=[url])
+        docker_run(
+            name="yt-dlp-docker",
+            dockerfile_or_url=str(DOCKER_FILE),
+            cwd=PROJECT_DIR / "tmp",
+            cmd_list=[url],
+        )
 
     # https://www.brighteon.com/f77d70c8-f5a9-44fa-8125-dc3a6ac85643
     def test_url2(self) -> None:
         url = "https://www.brighteon.com/f77d70c8-f5a9-44fa-8125-dc3a6ac85643"
-        docker_run(name="yt-dlp-docker", dockerfile_or_url=DOCKER_FILE, cwd=PROJECT_DIR / "tmp", cmd_list=[url])
+        docker_run(
+            name="yt-dlp-docker",
+            dockerfile_or_url=str(DOCKER_FILE),
+            cwd=PROJECT_DIR / "tmp",
+            cmd_list=[url],
+        )
 
 
 if __name__ == "__main__":
