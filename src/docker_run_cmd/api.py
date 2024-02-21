@@ -64,6 +64,11 @@ def docker_run(
             print(f"Downloading Dockerfile from {dockerfile_or_url}...")
             dockerfile = download(url=dockerfile_or_url, path=tempdir, replace=True)
             dockerfile = Path(dockerfile)
+            # rename to Dockerfile
+            dockerfile.rename(td / "Dockerfile")
+        else:
+            shutil.copy(dockerfile, td / "Dockerfile")
+
         docker_compose_content = DOCKER_COMPOSE_TEMPLATE.read_text(encoding="utf-8")
         # add quotes to each object if they are not already quoted
         cmd_list = [f'"{cmd}"' for cmd in cmd_list]
