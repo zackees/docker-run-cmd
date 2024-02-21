@@ -76,7 +76,7 @@ def docker_run(
         image_name = f"docker-run-cmd-{name}-image"
         container_name = f"docker-run-cmd-{name}-container"
         docker_compose_content = Template(docker_compose_content).substitute(
-            dockerfile=dockerfile.name,
+            dockerfile="Dockerfile",
             hostdir=str(cwd),
             command=cmd_str,
             image_name=image_name,
