@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "docker-run-cmd"
+readme = "README.md"
 description = "Runs Dockerized commands"
 requires-python = ">=3.7"
 keywords = ["template-python-cmd"]
@@ -13,7 +14,7 @@ dependencies = [
     "download",
 ]
 # Change this with the version number bump.
-version = "1.0.10"
+version = "1.0.11"
 
 
 [tool.ruff]
