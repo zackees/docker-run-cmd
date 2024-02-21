@@ -1,4 +1,4 @@
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals,too-many-statements
 
 import os
 import shutil
@@ -43,7 +43,11 @@ def remove_existing_container(container_name):
 
 
 def docker_run(
-    name: str, dockerfile_or_url: str, cwd: Path, cmd_list: list[str]
+    name: str,
+    dockerfile_or_url: str,
+    cwd: Path,
+    cmd_list: list[str],
+    extra_files: dict[Path, Path] | None = None,
 ) -> int:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
@@ -62,12 +66,25 @@ def docker_run(
         if not dockerfile.exists():
             # download the file
             print(f"Downloading Dockerfile from {dockerfile_or_url}...")
-            dockerfile = download(url=str(dockerfile_or_url), path=tempdir, replace=True)
+            dockerfile = download(
+                url=str(dockerfile_or_url), path=tempdir, replace=True
+            )
             dockerfile = Path(dockerfile)
             # rename to Dockerfile
             dockerfile.rename(td / "Dockerfile")
         else:
             shutil.copy(dockerfile, td / "Dockerfile")
+
+        # copy extra files
+        if extra_files:
+            for src, dst in extra_files.items():
+                if not src.exists():
+                    print(f"File not found: {src}")
+                    continue
+                if src.is_dir():
+                    shutil.copytree(str(src), str(td / dst))
+                else:
+                    shutil.copy(str(src), str(td / dst))
 
         docker_compose_content = DOCKER_COMPOSE_TEMPLATE.read_text(encoding="utf-8")
         # add quotes to each object if they are not already quoted
