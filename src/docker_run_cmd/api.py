@@ -62,7 +62,7 @@ def docker_run(
         if not dockerfile.exists():
             # download the file
             print(f"Downloading Dockerfile from {dockerfile_or_url}...")
-            dockerfile = download(url=dockerfile_or_url, path=tempdir, replace=True)
+            dockerfile = download(url=str(dockerfile_or_url), path=tempdir, replace=True)
             dockerfile = Path(dockerfile)
             # rename to Dockerfile
             dockerfile.rename(td / "Dockerfile")
