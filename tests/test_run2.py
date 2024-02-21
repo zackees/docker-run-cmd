@@ -24,7 +24,7 @@ class MainTester(unittest.TestCase):
             name="yt-dlp-docker",
             dockerfile_or_url=str(DOCKER_FILE),
             cwd=PROJECT_DIR / "tmp",
-            cmd_list=["--help"],
+            cmd_list=["--help"]
         )
         print()
 
@@ -47,6 +47,7 @@ class MainTester(unittest.TestCase):
             dockerfile_or_url=str(DOCKER_FILE),
             cwd=PROJECT_DIR / "tmp",
             cmd_list=[url],
+            platform="linux/amd64",
         )
 
 

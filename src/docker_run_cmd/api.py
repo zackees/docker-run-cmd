@@ -48,6 +48,7 @@ def docker_run(
     cwd: Path,
     cmd_list: list[str],
     extra_files: dict[Path, Path] | None = None,
+    platform: str | None = None
 ) -> int:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
@@ -92,12 +93,17 @@ def docker_run(
         cmd_str = "[" + ",".join(cmd_list) + "]"
         image_name = f"docker-run-cmd-{name}-image"
         container_name = f"docker-run-cmd-{name}-container"
+        if platform is None:
+            platform = ""
+        else:
+            platform = f"platform: {platform}"
         docker_compose_content = Template(docker_compose_content).substitute(
             dockerfile="Dockerfile",
             hostdir=str(cwd),
             command=cmd_str,
             image_name=image_name,
             container_name=container_name,
+            platform=platform,
         )
         docker_compose_file = td / "docker-compose.yml"
         docker_compose_file.write_text(docker_compose_content, encoding="utf-8")
