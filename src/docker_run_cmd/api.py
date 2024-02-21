@@ -1,4 +1,4 @@
-# pylint: disable=too-many-locals,too-many-statements
+# pylint: disable=too-many-locals,too-many-statements,too-many-arguments,too-many-branches
 
 import os
 import shutil
@@ -48,7 +48,7 @@ def docker_run(
     cwd: Path,
     cmd_list: list[str],
     extra_files: dict[Path, Path] | None = None,
-    platform: str | None = None
+    platform: str | None = None,
 ) -> int:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
