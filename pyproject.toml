@@ -3,6 +3,7 @@ requires = ["setuptools>=65.5.1", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
+dynamic = ["dependencies"]
 name = "docker-run-cmd"
 readme = "README.md"
 description = "Runs Dockerized commands"
@@ -10,9 +11,6 @@ requires-python = ">=3.7"
 keywords = ["template-python-cmd"]
 license = { text = "BSD 3-Clause License" }
 classifiers = ["Programming Language :: Python :: 3"]
-dependencies = [
-    "download",
-]
 # Change this with the version number bump.
 version = "1.0.11"
 
@@ -45,3 +43,5 @@ disable_error_code = ["import-untyped"]
 [project.scripts]
 docker-run-cmd = "docker_run_cmd.cli:main"
 docker-run-cmd-start-docker = "docker_run_cmd.cli_start_docker:main"
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
