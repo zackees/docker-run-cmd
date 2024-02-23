@@ -19,9 +19,16 @@ DOCKER_COMPOSE_TEMPLATE = HERE / "assets" / "docker-compose-template.yml"
 def check_docker_running():
     """Check if Docker service is running."""
     # result = os.system("docker ps")
-    result = subprocess.run(
-        ["docker", "ps"], capture_output=True, check=False
-    ).returncode
+    # take all stdout and stderr from the current process pipe and silence them
+    with TemporaryDirectory() as tempdir:
+        dev_null = "DEV" if os.name == "nt" else "/dev/null"
+        result = subprocess.run(
+            ["docker", "ps", ">", dev_null, "2>&1"],
+            check=False,
+            shell=True,
+            cwd=tempdir,
+        ).returncode
+
     return result == 0
 
 

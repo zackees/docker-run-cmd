@@ -16,7 +16,7 @@ def parse_args() -> argparse.Namespace:
         "dockerfile_or_url", help="Path to a Dockerfile or URL to download"
     )
     parser.add_argument(
-        "cmd_list", nargs="+", help="Command to run in the Docker container"
+        "cmd_list", nargs="*", help="Command to run in the Docker container"
     )
     return parser.parse_args()
 
