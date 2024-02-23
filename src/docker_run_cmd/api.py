@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -17,7 +18,10 @@ DOCKER_COMPOSE_TEMPLATE = HERE / "assets" / "docker-compose-template.yml"
 
 def check_docker_running():
     """Check if Docker service is running."""
-    result = os.system("docker ps")
+    # result = os.system("docker ps")
+    result = subprocess.run(
+        ["docker", "ps"], capture_output=True, check=False
+    ).returncode
     return result == 0
 
 
@@ -32,6 +36,14 @@ def start_docker_service():
         sys.exit(1)
     # Wait for Docker to start
     time.sleep(30)  # Adjust this as needed
+
+
+def start_docker_if_needed() -> bool:
+    """Start Docker service if it is not running."""
+    if not check_docker_running():
+        start_docker_service()
+        return True
+    return False
 
 
 def remove_existing_container(container_name):
@@ -57,9 +69,7 @@ def docker_run(
     if not shutil.which("docker"):
         print("docker not found. Please install it.")
         return 1
-    if not check_docker_running():
-        start_docker_service()
-
+    start_docker_if_needed()
     with TemporaryDirectory() as tempdir:
         td = Path(tempdir)
         print(f"Temporary directory: {td}")
