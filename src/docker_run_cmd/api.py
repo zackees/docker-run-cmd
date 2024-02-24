@@ -68,6 +68,7 @@ def docker_run(
     cmd_list: list[str],
     extra_files: dict[Path, Path] | None = None,
     platform: str | None = None,
+    shutdown_after_run: bool = True,
 ) -> int:
     """Run the Docker container."""
     if not shutil.which("docker-compose"):
@@ -146,6 +147,9 @@ def docker_run(
             os.system("docker network prune --force")
             rtn = os.system("docker-compose up --no-log-prefix --exit-code-from app")
             os.system("docker network prune --force")
+            if shutdown_after_run:
+                print("Shutting down Docker container...")
+                os.system("docker-compose down")
             print("DONE")
         finally:
             os.chdir(prev_dir)
