@@ -101,11 +101,14 @@ def docker_run(
                     print(f"File not found: {src}")
                     continue
                 if src.is_dir():
+                    print(f"Copying directory {src} to {td / dst}")
                     shutil.copytree(str(src), str(td / dst))
                 else:
+                    print(f"Copying file {src} to {td / dst}")
                     shutil.copy(str(src), str(td / dst))
 
         docker_compose_content = DOCKER_COMPOSE_TEMPLATE.read_text(encoding="utf-8")
+
         # add quotes to each object if they are not already quoted
         cmd_list = [f'"{cmd}"' for cmd in cmd_list]
         cmd_str = "[" + ",".join(cmd_list) + "]"
@@ -127,6 +130,7 @@ def docker_run(
         docker_compose_file.write_text(docker_compose_content, encoding="utf-8")
         # shutil.copy(DOCKER_COMPOSE_TEMPLATE, docker_compose_file)
         print(f"docker-compose file: {docker_compose_file}")
+        print(f"docker-compose content: {docker_compose_content}")
         target_dockerfile = td / "Dockerfile"
         # if not the same path then copy
         contents = dockerfile.read_text(encoding="utf-8")
